@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.swaglabs</groupId>
+	<artifactId>swaglabs-appium</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>SwagLabs Appium Automation</name>
+	<description>Appium + TestNG automation framework (Page Object Model) for
+		the SwagLabs mobile app</description>
+
+	<properties>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<suiteXmlFile>testng.xml</suiteXmlFile>
+
+		<!-- Dependency versions -->
+		<java.client.version>10.1.1</java.client.version>
+		<testng.version>7.10.2</testng.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- Appium Java Client -->
+		<dependency>
+			<groupId>io.appium</groupId>
+			<artifactId>java-client</artifactId>
+			<version>${java.client.version}</version>
+		</dependency>
+
+		<!-- Selenium (WebDriver core, required by Appium java-client) -->
+
+
+		<!-- TestNG for test execution -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>swaglabs-appium</finalName>
+		<plugins>
+
+			<!-- Compiler plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+
+			<!-- Surefire plugin to run TestNG suite -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<suiteXmlFiles>
+						<suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+					</suiteXmlFiles>
+
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

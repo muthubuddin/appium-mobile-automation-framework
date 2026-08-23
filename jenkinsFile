@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    parameters {
+        choice(
+            name: 'TEST_SUITE',
+            choices: [
+                'smokeTest.xml',
+                'regressionTest.xml'
+            ],
+            description: 'Select TestNG suite to execute'
+        )
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git(
+                    url: 'https://github.com/muthubuddin/appium-mobile-automation-framework.git',
+                    branch: 'main',
+                    credentialsId: 'github-token'
+                )
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo "Running TestNG suite: ${params.TEST_SUITE}"
+                script {
+                    def mavenCmd = "mvn clean test -DsuiteXmlFile=${params.TEST_SUITE}"
+                    if (isUnix()) {
+                        sh mavenCmd
+                    } else {
+                        bat mavenCmd
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: 'target/surefire-reports/**/*,test-output/**/*', allowEmptyArchive: true
+        }
+        success {
+            echo 'Tests completed successfully.'
+        }
+        failure {
+            echo 'Tests failed. Check the Jenkins console and TestNG reports.'
+        }
+    }
+}
